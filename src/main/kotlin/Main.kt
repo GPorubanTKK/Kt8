@@ -1,8 +1,7 @@
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
 fun main(args: Array<String>) {
-    val code = BufferedReader(FileReader(File(args[0]))).readLines()
-    val processor = Processor()
-    processor.execute(code)
+    val compiler = Compiler()
+    val memory = Ram(32768)
+    val processor = Processor(memory) //create processor with 32kb ram
+    memory.load(compiler.compileGasm(args[0]), 16384)
+    processor.execute(16384)
 }
