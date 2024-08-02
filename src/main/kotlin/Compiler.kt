@@ -5,7 +5,6 @@ import java.io.FileReader
 class Compiler {
     fun compileGasm(filePath: String): Array<UByte> {
         val lines = BufferedReader(FileReader(File(filePath))).readLines()
-        println(lines)
         val mutLines = lines.toMutableList()
         val bytes = mutableListOf<UByte>()
         val opcodes = mapOf<String, UByte>(
@@ -58,6 +57,7 @@ class Compiler {
                 }
             }
         }
+        println("ASM bytes $bytes")
         return bytes.toTypedArray()
     }
 }

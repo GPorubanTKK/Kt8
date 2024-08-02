@@ -26,7 +26,6 @@ class Processor(
         programCounter = readStart
             while (programCounter <= (readEnd - 3u).toInt()) {
                 val cpy = mem.copyOfRange(programCounter, programCounter + 3)
-                //println("pc $programCounter")
                 val (opcode, arg1, arg2) = cpy
                 if(opcode.toInt() == 0) {
                     programCounter += 3
@@ -70,9 +69,6 @@ class Processor(
             }
         println()
         for ((id, reg) in registers) println("Register $id contains ${reg.getValue()}")
-        for ((memLoc, value) in memory.memory.copyOfRange(stack.startingLocation, stack.startingLocation + stack.size).withIndex()) {
-            println("Stack has byte $value at location $memLoc")
-        }
         println("Stack ptr is ${stack.getPointerLocation()}")
     }
 
@@ -101,16 +97,16 @@ class Processor(
     private fun write(addr: UShort) { memory.memory[addr.toInt()] = stack.pop() } //WRT
     private fun write(value: UByte) { memory.memory[decBytesToShort(registers["ADT"]!!.getValue(), registers["ADB"]!!.getValue()).toInt()] = value } //WRT
     abstract class Register<T, V> {
-        protected abstract var _value: V
+        protected abstract var pValue: V
         abstract fun setByValue(value: V)
         abstract fun setByRegister(other: T)
         abstract fun getValue(): V
     }
     class EightBitRegister : Register<EightBitRegister, UByte>() {
-        override var _value: UByte = 0u
-        override fun setByValue(value: UByte) { this._value = value }
-        override fun setByRegister(other: EightBitRegister) { this._value = other._value }
-        override fun getValue() = _value
+        override var pValue: UByte = 0u
+        override fun setByValue(value: UByte) { this.pValue = value }
+        override fun setByRegister(other: EightBitRegister) { this.pValue = other.pValue }
+        override fun getValue() = pValue
     }
     class Stack(ram: Ram, val size: Int, val startingLocation: Int) {
         private var pointer = startingLocation - 1
