@@ -1,7 +1,10 @@
+import java.io.PrintStream
+
 class Processor(
     private val memory: Ram,
     stackRange: IntRange = 1 .. 1025, //so stack ptr is not negative
-    private val programMemory: IntRange = 16384 ..< 32768
+    private val programMemory: IntRange = 16384 ..< 32768,
+    private val stdout: PrintStream = System.out
 ) {
     private val stack = Stack(memory, stackRange.last - stackRange.first, stackRange.first)
     private var programCounter = 1
@@ -12,17 +15,17 @@ class Processor(
         "D" to EightBitRegister(),
         "E" to EightBitRegister(),
         "F" to EightBitRegister(),
-        "ADT" to EightBitRegister(),
-        "ADB" to EightBitRegister()
+        "U" to EightBitRegister(),
+        "L" to EightBitRegister()
     )
     fun execute(start: Int) {
         if(!programMemory.contains(start)) throw Exception("SEGFAULT")
         val mem = memory.memory
         val readStart = start + 3
         val header = mem.copyOfRange(start, readStart)
-        if(header[0].toInt() != 127) throw Exception("INVALID HEADER")
+        if(header[0].toInt() != 127) throw Exception("INVALID HEADER ${header.toList()}")
         val readEnd = (header[1] * 3u) + readStart.toUInt()
-        println("First Byte: $start, Start Read: $readStart, End Read: $readEnd")
+        stdout.println("First Byte: $start, Start Read: $readStart, End Read: $readEnd")
         programCounter = readStart
             while (programCounter <= (readEnd - 3u).toInt()) {
                 val cpy = mem.copyOfRange(programCounter, programCounter + 3)
@@ -67,9 +70,9 @@ class Processor(
                 }
                 if(!listOf(11, 12, 13).contains(opcode.toInt())) programCounter += 3
             }
-        println()
-        for ((id, reg) in registers) println("Register $id contains ${reg.getValue()}")
-        println("Stack ptr is ${stack.getPointerLocation()}")
+        stdout.println()
+        for ((id, reg) in registers) stdout.println("Register $id contains ${reg.getValue()}")
+        stdout.println("Stack ptr is ${stack.getPointerLocation()}")
     }
 
     private fun add() = stack.push((stack.pop() + stack.pop()).toUByte()) //ADD
@@ -86,16 +89,16 @@ class Processor(
     private fun jnz(register: String, lineNum: Int) = if(registers[register]!!.getValue().toInt() != 0) programCounter = lineNum else programCounter += 3 //JNZ
     private fun cmp() = stack.push(if(stack.pop().toInt() >= stack.pop().toInt()) 1u else 0u)
     private fun mov(regFrom: String, regTo: String) = registers[regTo]!!.setByRegister(registers[regFrom]!!) //MOV
-    private fun chr(reg: String) = print(registers[reg]!!.getValue().toInt().toChar()) //CHR
-    private fun chr() = print(Char(stack.pop().toInt())) //CHR
+    private fun chr(reg: String) = stdout.print(registers[reg]!!.getValue().toInt().toChar()) //CHR
+    private fun chr() = stdout.print(Char(stack.pop().toInt())) //CHR
     private fun and() = stack.push((stack.pop().toInt() and stack.pop().toInt()).toUByte()) //AND
     private fun or() = stack.push((stack.pop().toInt() or stack.pop().toInt()).toUByte()) //POR
     private fun xor() = stack.push((stack.pop().toInt() xor stack.pop().toInt()).toUByte()) //XOR
     private fun jiz(register: String, lineNum: Int) = if (registers[register]!!.getValue().toInt() == 0) programCounter = lineNum else programCounter += 3 //JIZ
     private fun read(addr: UShort) = stack.push(memory.memory[addr.toInt()]) //RED
-    private fun read(register: String) = registers[register]!!.setByValue(memory.memory[decBytesToShort(registers["ADT"]!!.getValue(), registers["ADB"]!!.getValue()).toInt()]) //RED
+    private fun read(register: String) = registers[register]!!.setByValue(memory.memory[decBytesToShort(registers["U"]!!.getValue(), registers["L"]!!.getValue()).toInt()]) //RED
     private fun write(addr: UShort) { memory.memory[addr.toInt()] = stack.pop() } //WRT
-    private fun write(value: UByte) { memory.memory[decBytesToShort(registers["ADT"]!!.getValue(), registers["ADB"]!!.getValue()).toInt()] = value } //WRT
+    private fun write(value: UByte) { memory.memory[decBytesToShort(registers["U"]!!.getValue(), registers["L"]!!.getValue()).toInt()] = value } //WRT
     abstract class Register<T, V> {
         protected abstract var pValue: V
         abstract fun setByValue(value: V)

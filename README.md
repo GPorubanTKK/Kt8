@@ -5,11 +5,10 @@
 
 The Kt8 is a 8 bit virtual computer.  It contains:
 - 6 general purpose 8 bit registers (A-F) for inbuilt memory
-- 2 8 bit registers representing one 16 bit address register (ADT and ADB) 
+- 2 8 bit registers representing one 16 bit address register (U and L) 
 - Stack based
 - Support for up to 64kb or memory with a 16 bit address bus
-- A custom instruction set and assembler
-
+- A custom instruction set and compiler
 
 
 <h2>
