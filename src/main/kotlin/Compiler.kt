@@ -3,8 +3,9 @@ import java.io.File
 import java.io.FileReader
 
 class Compiler {
-    fun compileGasm(filePath: String): Array<UByte> {
-        val lines = BufferedReader(FileReader(File(filePath))).readLines()
+    fun compileGasm(filePath: File): Array<UByte> = compileGasm(BufferedReader(FileReader(filePath)).readText())
+    fun compileGasm(gasm: String): Array<UByte> {
+        val lines = gasm.lines()
         val mutLines = lines.toMutableList()
         val bytes = mutableListOf<UByte>()
         val opcodes = mapOf<String, UByte>(
@@ -31,8 +32,10 @@ class Compiler {
             //20 CHR w no args
             "RED" to 21u,
             //22 RED w registers
-            "WRT" to 23u
+            "WRT" to 23u,
             //24 WRT w registers
+            "INC" to 25u,
+            "DEC" to 26u
         )
         mutLines.replaceAll { if(it.matches("(;.+)".toRegex())) "\n" else it } //remove full line comments
         mutLines.replaceAll { if(it.contains(';')) it.substring(0 ..< it.indexOf(';')) else it } //remove eol comments
