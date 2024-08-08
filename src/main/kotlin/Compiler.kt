@@ -35,7 +35,9 @@ class Compiler {
             "WRT" to 23u,
             //24 WRT w registers
             "INC" to 25u,
-            "DEC" to 26u
+            "DEC" to 26u,
+            "LDA" to 28u
+            //29 LDA with no args
         )
         mutLines.replaceAll { if(it.matches("(;.+)".toRegex())) "\n" else it } //remove full line comments
         mutLines.replaceAll { if(it.contains(';')) it.substring(0 ..< it.indexOf(';')) else it } //remove eol comments
@@ -46,6 +48,7 @@ class Compiler {
                 "CHR" -> if(data.size == 1) 20u else 19u
                 "RED" -> if(data.size == 2) 22u else 21u
                 "WRT" -> if(data.size == 2) 24u else 23u
+                "LDA" -> if(data.size == 1) 29u else 28u
                 else -> opcodes[data[0]]!!
             }
             bytes += when(data[0]) {

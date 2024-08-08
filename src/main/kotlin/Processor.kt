@@ -67,10 +67,12 @@ class Processor(
                     24 -> write(arg1) //write the specified value to the memory address specified in the address register
                     25 -> inc()
                     26 -> dec()
+                    27 -> lda(decBytesToShort(arg1, arg2))
+                    28 -> lda()
                     else -> throw Exception()
                 }
                 if(!listOf(11, 12, 13, 14).contains(opcode.toInt())) programCounter += 3u
-                while(hangCondition(programCounter));
+                while(hangCondition(programCounter)) { println("Hanging...") }
             }
         outputStream.println("\n")
         for ((id, reg) in registers) outputStream.println("Register $id contains ${reg.getValue()}")
@@ -102,9 +104,15 @@ class Processor(
     private fun write(addr: UShort) { memory[addr.toInt()] = stack.pop() } //WRT
     private fun write(value: UByte) { memory[(registers["R"]!! as SixteenBitRegister).getValue().toInt()] = value } //WRT
     private fun inc() {
+        val register = (registers["R"]!! as SixteenBitRegister)
+        register.setByValue((register.getValue() + 1u).toUShort())
     }
     private fun dec() {
+        val register = (registers["R"]!! as SixteenBitRegister)
+        register.setByValue((register.getValue() - 1u).toUShort())
     }
+    private fun lda() = (registers["R"]!! as SixteenBitRegister).setByValue(decBytesToShort(stack.pop(), stack.pop()))
+    private fun lda(value: UShort) = (registers["R"]!! as SixteenBitRegister).setByValue(value)
     abstract class Register<in T : Register<T, V>, V> {
         protected abstract var pValue: V
         open fun setByValue(value: V) { pValue = value }
