@@ -113,7 +113,7 @@ class Processor(
     }
     private fun lda() = (registers["R"]!! as SixteenBitRegister).setByValue(decBytesToShort(stack.pop(), stack.pop()))
     private fun lda(value: UShort) = (registers["R"]!! as SixteenBitRegister).setByValue(value)
-    abstract class Register<in T : Register<T, V>, V> {
+    abstract class Register<in T : Register<T, V>, V : Comparable<V>> {
         protected abstract var pValue: V
         open fun setByValue(value: V) { pValue = value }
         open fun setByRegister(other: T) { pValue = other.pValue }
@@ -125,16 +125,16 @@ class Processor(
     class SixteenBitRegister : Register<SixteenBitRegister, UShort>() {
         override var pValue: UShort = 0u
     }
-    class Stack(ram: Ram, private val size: UInt, private val startingLocation: UInt) {
+    open class Stack(ram: Ram, private val size: UInt, private val startingLocation: UInt) {
         private var pointer = startingLocation - 1u
         private val memory = ram.memory
-        fun push(value: UByte) { checkPointer(); memory[(++pointer).toInt()] = value }
-        fun pop(): UByte { checkPointer(); return memory[pointer--.toInt()] }
+        open fun push(value: UByte) { checkPointer(); memory[(++pointer).toInt()] = value }
+        open fun pop(): UByte { checkPointer(); return memory[pointer--.toInt()] }
         fun getPointerLocation() = pointer
         private fun checkPointer() = if(pointer >= startingLocation + size) throw OutOfMemoryError() else Unit
     }
-    private fun UByte.toStr() = toInt().toChar().toString()
-    private fun decBytesToShort(top8: UByte, bottom8: UByte): UShort {
+    internal fun UByte.toStr() = toInt().toChar().toString()
+    internal fun decBytesToShort(top8: UByte, bottom8: UByte): UShort {
         return ((top8.toUInt() * 256u) + bottom8).toUShort()
     }
 }
