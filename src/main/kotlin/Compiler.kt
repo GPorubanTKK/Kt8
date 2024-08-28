@@ -11,7 +11,7 @@ class Compiler {
     /**
      * Compiles a gASM source file from path
      * @author RandomLonelyDev
-     * @since 1.5.0
+     * @since 1.0.0
      * @param filePath The file object describing the location of the gASM source file
      * */
     fun compileGasm(filePath: File): Array<UByte> = compileGasm(BufferedReader(FileReader(filePath)).readText())

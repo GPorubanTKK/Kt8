@@ -11,7 +11,7 @@
  * */
 internal fun String.toUByte(): UByte {
     return try {
-        if(length == 8)
+        if(startsWith("%"))
             toUByte(2)
         else if(startsWith("x"))
             removePrefix("x").toUByte(16)
