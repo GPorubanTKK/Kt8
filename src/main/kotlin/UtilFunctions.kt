@@ -8,3 +8,12 @@
  * @return A short in the formula of (top8 * 256) + bottom8
  * */
 internal fun twoBytesToShort(top8: UByte, bottom8: UByte) = ((top8 * 256u) + bottom8).toUShort()
+
+/**
+ * Takes a 16-bit number and converts it into an array
+ * @author RandomLonelyDev
+ * @since 1.1.0
+ * @param short The 16-bit number to convert
+ * @return An array of two bytes where return[0] is the high eight bits and return [1] is the low eight bits
+ * */
+internal fun shortToTwoBytes(short: UShort) : Array<UByte> = arrayOf((short / 256u).toUByte(), (short % 256u).toUByte())
