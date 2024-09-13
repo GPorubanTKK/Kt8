@@ -169,7 +169,7 @@ class Compiler {
         )
         mutLines.replaceAll { if(it.matches("(;.+)".toRegex())) "\n" else it } //remove full line comments
         mutLines.replaceAll { if(it.contains(';')) it.substring(0 ..< it.indexOf(';')) else it } //remove eol comments
-        bytes += listOf(127u, mutLines.size.toUByte(), 0u)
+        bytes += 127u; bytes += shortToTwoBytes((mutLines.size.toUShort() * 3u).toUShort())
         for(line in mutLines) {
             val split = line.split("[ ,]".toRegex())
             val (statement, arg) = split

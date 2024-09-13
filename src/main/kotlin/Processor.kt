@@ -39,6 +39,8 @@ class Processor(
         5 to z
     )
 
+    fun getRegisterValues() = regCodes.values.map { it.getAsByte() }
+
     /**
      * The size of each instruction in bytes
      * */
@@ -69,11 +71,11 @@ class Processor(
         if(!programMemory.contains(start)) throw Exception("SEGFAULT")
         val readStart = (start + instructionSize).toUShort()
         val header = memory.getRange(start, readStart)
-        if(header[0].toInt() != 127) throw Exception("INVALID HEADER ${header.toList()}")
-        val readEnd = twoBytesToShort(header[1], header[2]) //the last byte containing program code
+        if(header[0].toInt() != 127) throw Exception("INVALID HEADER ${header.toList()} at ${pc.pValue}")
+        val readEnd = twoBytesToShort(header[1], header[2]) + start //the first byte of the last instruction
         println("First Byte: $start, Start Read: $readStart, End Read: $readEnd")
         pc.setByValue(readStart)
-        while(pc.getValue() < readEnd - instructionSize) {
+        while(pc.getValue() <= readEnd) {
             var cond = hangCondition(pc.getValue())
             while(cond) { cond = hangCondition(pc.getValue()) }
             val (opcode, arg1, arg2) = memory.getRange(pc.getValue(), (pc.getValue() + instructionSize).toUShort())
@@ -158,13 +160,13 @@ class Processor(
                     flags.setBit(Position.`128`, z.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, z.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
-                17 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = accumulator.getAsByte()
-                18 -> memory[arg1 + w.getAsByte()] = accumulator.getAsByte()
-                19 -> memory[arg1 + x.getAsByte()] = accumulator.getAsByte()
-                20 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = w.getAsByte()
-                21 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = x.getAsByte()
-                22 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = y.getAsByte()
-                23 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = z.getAsByte()
+                17 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = accumulator.getValue()
+                18 -> memory[arg1 + w.getAsByte()] = accumulator.getValue()
+                19 -> memory[arg1 + x.getAsByte()] = accumulator.getValue()
+                20 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = w.getValue()
+                21 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = x.getValue()
+                22 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = y.getValue()
+                23 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = z.getValue()
                 24 -> pc.setByValue(twoBytesToShort(arg1, arg2))
                 25 -> {
                     val addr = twoBytesToShort(arg1, arg2)
@@ -378,7 +380,7 @@ class Processor(
             onMemoryUpdate(pc.getValue().toInt())
         }
         outputStream.println("Done.")
-        outputStream.println("A: ${accumulator.pValue} W: ${w.pValue} X: ${x.pValue} Y: ${y.pValue} Z: ${z.pValue} PC: ${pc.pValue} SP: ${sp.pValue} FLAGS: ${flags.pValue}")
+        outputStream.println("A: ${accumulator.getAsByte()} W: ${w.getAsByte()} X: ${x.getAsByte()} Y: ${y.getAsByte()} Z: ${z.getAsByte()} PC: ${pc.pValue} SP: ${sp.getAsByte()} FLAGS: \n${flags.getValue()}")
     }
 
     internal fun cmp(register: BitSpecificRegister, valueToCompare: UByte) = when(register.getAsByte().compareTo(valueToCompare)) {

@@ -6,7 +6,7 @@
  * */
 class Ram(sizeInBytes: Int) {
 
-    private val memory = Array(sizeInBytes) { BitSpecificValue() }
+    private val memory = Array(sizeInBytes) { BitSpecificValue.of(0u) }
 
     /**
      * Puts a copy of the byte array into the memory
@@ -16,9 +16,9 @@ class Ram(sizeInBytes: Int) {
      * @param startByte The position of the first byte to load
      * */
     fun load(bytes: Array<UByte>, startByte: Int) {
-        for(byte in bytes.indices) {
-            val b = bytes[byte]
-            val index = byte + startByte
+        for(i in bytes.indices) {
+            val b = bytes[i]
+            val index = i + startByte
             memory[index].setByByte(b)
         }
     }
@@ -28,7 +28,7 @@ class Ram(sizeInBytes: Int) {
      * @author RandomLonelyDev
      * @since 1.0.0
      * */
-    fun clear() = memory.fill(BitSpecificValue())
+    fun clear() = memory.forEach { it.setByByte(0u) }
 
     /**
      * Gets a copy of a range from memory
@@ -64,4 +64,6 @@ class Ram(sizeInBytes: Int) {
     operator fun set(index: Int, value: BitSpecificValue) { memory[index] = value }
     operator fun set(index: UInt, value: BitSpecificValue) { memory[index.toInt()] = value }
     operator fun set(index: UShort, value: BitSpecificValue) { memory[index.toInt()] = value }
+
+    fun toList() = memory.asList()
 }
