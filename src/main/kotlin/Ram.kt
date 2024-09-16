@@ -47,9 +47,8 @@ class Ram(sizeInBytes: Int) {
      * @param index The index to retrieve
      * @return The byte stored in the index
      * */
-    operator fun get(index: Int) = memory[index]
-    operator fun get(index: UInt) = get(index.toInt())
-    operator fun get(index: UShort) = get(index.toUInt())
+    operator fun get(index: UShort) = memory[index.toInt()]
+    operator fun get(index: UByte) = memory[index.toInt()]
 
     /**
      * Overwrites a specific index in memory with a new value
@@ -58,11 +57,7 @@ class Ram(sizeInBytes: Int) {
      * @param index The index to overwrite
      * @param value The value to write
      * */
-    operator fun set(index: Int, value: UByte) { memory[index].setByByte(value) }
-    operator fun set(index: UInt, value: UByte) { memory[index.toInt()].setByByte(value) }
     operator fun set(index: UShort, value: UByte) { memory[index.toInt()].setByByte(value) }
-    operator fun set(index: Int, value: BitSpecificValue) { memory[index] = value }
-    operator fun set(index: UInt, value: BitSpecificValue) { memory[index.toInt()] = value }
     operator fun set(index: UShort, value: BitSpecificValue) { memory[index.toInt()] = value }
 
     fun toList() = memory.asList()

@@ -44,14 +44,14 @@ interface WriteTarget {
  * @param startingLocation The first location in memory allocated to the stack
  * */
 internal open class Stack(private val ram: Ram, private val size: UInt, private val startingLocation: UInt) {
-    private var pointer = (startingLocation + size - 1u).toInt()
+    private var pointer = (startingLocation + size - 1u).toUShort()
 
     /**
      * A public getter for the pointer
      * @author RandomLonelyDev
      * @since 1.0.0
      * */
-    val ptr: Int get() = pointer
+    val ptr: UShort get() = pointer
 
     /**
      * Put a value onto the top of the stack
@@ -85,7 +85,7 @@ internal open class Stack(private val ram: Ram, private val size: UInt, private 
     /**
      * Reset the pointer to the beginning of the stack
      * */
-    internal fun reset() { pointer = (startingLocation + size - 1u).toInt() }
+    internal fun reset() { pointer = (startingLocation + size - 1u).toUShort() }
 
     /**
      * Read a value in the range of the stack memory without removing it
@@ -94,7 +94,7 @@ internal open class Stack(private val ram: Ram, private val size: UInt, private 
      * @param locToRead The location inside the stack to read
      * @return The value at that location
      * */
-    internal fun peek(locToRead: Int): BitSpecificValue {
+    internal fun peek(locToRead: UShort): BitSpecificValue {
         if(locToRead.toUInt() >= startingLocation + size || locToRead.toUInt() < startingLocation) throw NullPointerException()
         return ram[locToRead]
     }

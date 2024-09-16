@@ -3,7 +3,7 @@
  * @author RandomLonelyDev
  * @since 1.0.0
  * */
-internal abstract class Register<in T : Register<T, V>, V : Comparable<V>> {
+abstract class Register<in T : Register<T, V>, V : Comparable<V>> {
 
     /**
      * The private mutable variable
@@ -35,25 +35,15 @@ internal abstract class Register<in T : Register<T, V>, V : Comparable<V>> {
 }
 
 /**
- * An eight-bit register
- * @author RandomLonelyDev
- * @since 1.0.0
- * */
-internal class EightBitRegister(initialValue: UByte = 0u) : Register<EightBitRegister, UByte>() {
-    override var pValue: UByte = initialValue
-    fun setByValue(value: UInt) { setByValue(value.toUByte()) }
-}
-
-/**
  * A sixteen-bit register
  * @author RandomLonelyDev
  * @since 1.0.0
  * */
-internal class SixteenBitRegister(initialValue: UShort = 0u) : Register<SixteenBitRegister, UShort>() {
+class SixteenBitRegister(initialValue: UShort = 0u) : Register<SixteenBitRegister, UShort>() {
     override var pValue: UShort = initialValue
 }
 
-internal class BitSpecificRegister : Register<BitSpecificRegister, BitSpecificValue>() {
+class BitSpecificRegister : Register<BitSpecificRegister, BitSpecificValue>() {
     private val specificValue = BitSpecificValue()
 
     fun setByValue(value: UByte) = specificValue.setByByte(value)

@@ -86,12 +86,12 @@ class Processor(
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 2 -> {
-                    accumulator.setByValue(memory[arg1 + w.getAsByte()])
+                    accumulator.setByValue(memory[arg1 + w])
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO)
                 }
                 3 -> {
-                    accumulator.setByValue(memory[arg1 + x.getAsByte()])
+                    accumulator.setByValue(memory[arg1 + x])
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -101,12 +101,12 @@ class Processor(
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 5 -> {
-                    w.setByValue(memory[twoBytesToShort(arg1, arg2).toUInt()])
+                    w.setByValue(memory[twoBytesToShort(arg1, arg2)])
                     flags.setBit(Position.`128`, w.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, w.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 6 -> {
-                    w.setByValue(memory[arg1 + x.getAsByte()])
+                    w.setByValue(memory[arg1 + x])
                     flags.setBit(Position.`128`, w.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, w.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -116,12 +116,12 @@ class Processor(
                     flags.setBit(Position.`2`, w.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 8 -> {
-                    x.setByValue(memory[twoBytesToShort(arg1, arg2).toUInt()])
+                    x.setByValue(memory[twoBytesToShort(arg1, arg2)])
                     flags.setBit(Position.`128`, x.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, x.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 9 -> {
-                    x.setByValue(memory[arg1 + w.getAsByte()])
+                    x.setByValue(memory[arg1 + w])
                     flags.setBit(Position.`128`, x.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, x.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -131,12 +131,12 @@ class Processor(
                     flags.setBit(Position.`2`, x.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 11 -> {
-                    y.setByValue(memory[twoBytesToShort(arg1, arg2).toUInt()])
+                    y.setByValue(memory[twoBytesToShort(arg1, arg2)])
                     flags.setBit(Position.`128`, y.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, y.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 12 -> {
-                    y.setByValue(memory[arg1 + x.getAsByte()])
+                    y.setByValue(memory[arg1 + x])
                     flags.setBit(Position.`128`, y.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, y.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -146,12 +146,12 @@ class Processor(
                     flags.setBit(Position.`2`, y.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 14 -> {
-                    z.setByValue(memory[twoBytesToShort(arg1, arg2).toUInt()])
+                    z.setByValue(memory[twoBytesToShort(arg1, arg2)])
                     flags.setBit(Position.`128`, z.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, z.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 15 -> {
-                    z.setByValue(memory[arg1 + w.getAsByte()])
+                    z.setByValue(memory[arg1 + w])
                     flags.setBit(Position.`128`, z.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, z.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -160,17 +160,17 @@ class Processor(
                     flags.setBit(Position.`128`, z.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, z.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
-                17 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = accumulator.getValue()
-                18 -> memory[arg1 + w.getAsByte()] = accumulator.getValue()
-                19 -> memory[arg1 + x.getAsByte()] = accumulator.getValue()
-                20 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = w.getValue()
-                21 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = x.getValue()
-                22 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = y.getValue()
-                23 -> memory[twoBytesToShort(arg1, arg2).toUInt()] = z.getValue()
+                17 -> memory[twoBytesToShort(arg1, arg2)] = accumulator.getValue()
+                18 -> memory[arg1 + w] = accumulator.getValue()
+                19 -> memory[arg1 + x] = accumulator.getValue()
+                20 -> memory[twoBytesToShort(arg1, arg2)] = w.getValue()
+                21 -> memory[twoBytesToShort(arg1, arg2)] = x.getValue()
+                22 -> memory[twoBytesToShort(arg1, arg2)] = y.getValue()
+                23 -> memory[twoBytesToShort(arg1, arg2)] = z.getValue()
                 24 -> pc.setByValue(twoBytesToShort(arg1, arg2))
                 25 -> {
                     val addr = twoBytesToShort(arg1, arg2)
-                    pc.setByValue(twoBytesToShort(memory[addr].toByte(), memory[addr + 1u].toByte()))
+                    pc.setByValue(twoBytesToShort(memory[addr].toByte(), memory[addr.next()].toByte()))
                 }
                 26 -> {
                     val jumpTo = (twoBytesToShort(arg1, arg2) - instructionSize).toUShort()
@@ -193,24 +193,24 @@ class Processor(
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 36 -> cmp(accumulator, memory[twoBytesToShort(arg1, arg2)])
-                37 -> cmp(accumulator, memory[twoBytesToShort(arg1, arg2) + w.getAsByte()])
-                38 -> cmp(accumulator, memory[twoBytesToShort(arg1, arg2) + x.getAsByte()])
+                37 -> cmp(accumulator, memory[twoBytesToShort(arg1, arg2) + w])
+                38 -> cmp(accumulator, memory[twoBytesToShort(arg1, arg2) + x])
                 39 -> cmp(accumulator, arg1)
                 40 -> cmp(w, memory[twoBytesToShort(arg1, arg2)])
                 41 -> cmp(w, arg1)
                 42 -> cmp(x, memory[twoBytesToShort(arg1, arg2)])
                 43 -> cmp(x, arg1)
                 44 -> and(accumulator, memory[twoBytesToShort(arg1, arg2)])
-                45 -> and(accumulator, memory[twoBytesToShort(arg1, arg2) + w.getAsByte()])
-                46 -> and(accumulator, memory[twoBytesToShort(arg1, arg2) + x.getAsByte()])
+                45 -> and(accumulator, memory[twoBytesToShort(arg1, arg2) + w])
+                46 -> and(accumulator, memory[twoBytesToShort(arg1, arg2) + x])
                 47 -> and(accumulator, arg1)
                 48 -> or(accumulator, memory[twoBytesToShort(arg1, arg2)])
-                49 -> or(accumulator, memory[twoBytesToShort(arg1, arg2) + w.getAsByte()])
-                50 -> or(accumulator, memory[twoBytesToShort(arg1, arg2) + x.getAsByte()])
+                49 -> or(accumulator, memory[twoBytesToShort(arg1, arg2) + w])
+                50 -> or(accumulator, memory[twoBytesToShort(arg1, arg2) + x])
                 51 -> or(accumulator, arg1)
                 52 -> xor(accumulator, memory[twoBytesToShort(arg1, arg2)])
-                53 -> xor(accumulator, memory[twoBytesToShort(arg1, arg2) + w.getAsByte()])
-                54 -> xor(accumulator, memory[twoBytesToShort(arg1, arg2) + x.getAsByte()])
+                53 -> xor(accumulator, memory[twoBytesToShort(arg1, arg2) + w])
+                54 -> xor(accumulator, memory[twoBytesToShort(arg1, arg2) + x])
                 55 -> xor(accumulator, arg1)
                 56 -> {
                     flags.setBit(Position.`1`, memory[twoBytesToShort(arg1, arg2)].rotateByteLeft(flags.getBit(Position.`1`)))
@@ -222,8 +222,8 @@ class Processor(
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 58 -> {
-                    flags.setBit(Position.`1`, memory[twoBytesToShort(arg1, arg2) + w.getAsByte()].rotateByteLeft(flags.getBit(Position.`1`)))
-                    flags.setBit(Position.`128`, memory[twoBytesToShort(arg1, arg2) + w.getAsByte()].getBit(Position.`128`)) //set negative flag
+                    flags.setBit(Position.`1`, memory[twoBytesToShort(arg1, arg2) + w].rotateByteLeft(flags.getBit(Position.`1`)))
+                    flags.setBit(Position.`128`, memory[twoBytesToShort(arg1, arg2) + w].getBit(Position.`128`)) //set negative flag
                 }
                 59 -> {
                     memory[twoBytesToShort(arg1, arg2)].rotateByteRight(flags.getBit(Position.`1`))
@@ -235,8 +235,8 @@ class Processor(
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 61 -> {
-                    memory[twoBytesToShort(arg1, arg2) + w.getAsByte()].rotateByteRight(flags.getBit(Position.`1`))
-                    flags.setBit(Position.`128`, memory[twoBytesToShort(arg1, arg2) + w.getAsByte()].getBit(Position.`128`)) //set negative flag
+                    memory[twoBytesToShort(arg1, arg2) + w].rotateByteRight(flags.getBit(Position.`1`))
+                    flags.setBit(Position.`128`, memory[twoBytesToShort(arg1, arg2) + w].getBit(Position.`128`)) //set negative flag
                 }
                 62 -> {
                     val loc = memory[twoBytesToShort(arg1, arg2)]
@@ -249,7 +249,7 @@ class Processor(
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 64 -> {
-                    val loc = memory[twoBytesToShort(arg1, arg2) + w.getAsByte()]
+                    val loc = memory[twoBytesToShort(arg1, arg2) + w]
                     flags.setBit(Position.`1`, loc.bitShiftRight())
                     flags.setBit(Position.`128`, loc.getBit(Position.`128`)) //set negative flag
                 }
@@ -264,7 +264,7 @@ class Processor(
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 67 -> {
-                    val loc = memory[twoBytesToShort(arg1, arg2) + w.getAsByte()]
+                    val loc = memory[twoBytesToShort(arg1, arg2) + w]
                     flags.setBit(Position.`1`, loc.bitShiftLeft())
                     flags.setBit(Position.`128`, loc.getBit(Position.`128`)) //set negative flag
                 }
@@ -275,12 +275,12 @@ class Processor(
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 69 -> {
-                    add(accumulator, memory[twoBytesToShort(arg1, arg2) + w.getAsByte()])
+                    add(accumulator, memory[twoBytesToShort(arg1, arg2) + w])
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 70 -> {
-                    add(accumulator, memory[twoBytesToShort(arg1, arg2) + x.getAsByte()])
+                    add(accumulator, memory[twoBytesToShort(arg1, arg2) + x])
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -295,12 +295,12 @@ class Processor(
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 73 -> {
-                    sub(accumulator, memory[twoBytesToShort(arg1, arg2) + w.getAsByte()])
+                    sub(accumulator, memory[twoBytesToShort(arg1, arg2) + w])
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
                 74 -> {
-                    sub(accumulator, memory[twoBytesToShort(arg1, arg2) + x.getAsByte()])
+                    sub(accumulator, memory[twoBytesToShort(arg1, arg2) + x])
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -317,7 +317,7 @@ class Processor(
                     flags.setBit(Position.`2`, result == BitSpecificValue.ZERO) //set zero flag
                 }
                 77 -> {
-                    val loc = twoBytesToShort(arg1, arg2) + w.getAsByte()
+                    val loc = twoBytesToShort(arg1, arg2) + w
                     val (result, _, _) = memory[loc].plus(BitSpecificValue.of(1u))
                     memory[loc] = result
                     flags.setBit(Position.`128`, result.getBit(Position.`128`)) //set negative flag
@@ -343,7 +343,7 @@ class Processor(
                     flags.setBit(Position.`2`, result == BitSpecificValue.ZERO) //set zero flag
                 }
                 81 -> {
-                    val loc = twoBytesToShort(arg1, arg2) + w.getAsByte()
+                    val loc = twoBytesToShort(arg1, arg2) + w
                     val (result, _, _) = memory[loc].minus(BitSpecificValue.of(1u))
                     memory[loc] = result
                     flags.setBit(Position.`128`, result.getBit(Position.`128`)) //set negative flag

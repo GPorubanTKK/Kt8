@@ -47,15 +47,10 @@ internal fun String.determineNumSize(binPrefix: String, hexPrefix: String): Int 
  *  @return An unsigned short representing the numeric value of a string
  *  @see String.toUByte(String,String)
  * */
-internal fun String.toUShort(
-    binPrefix: String,
-    hexPrefix: String
-): UShort {
-    return when {
-        startsWith(binPrefix) -> removePrefix(binPrefix).toUShort(2)
-        startsWith(hexPrefix) -> removePrefix(hexPrefix).toUShort(16)
-        else -> toUShort(10)
-    }
+internal fun String.toUShort(binPrefix: String, hexPrefix: String) = when {
+    startsWith(binPrefix) -> removePrefix(binPrefix).toUShort(2)
+    startsWith(hexPrefix) -> removePrefix(hexPrefix).toUShort(16)
+    else -> toUShort(10)
 }
 
 /**
@@ -66,21 +61,14 @@ internal fun String.toUShort(
  * @param hexPrefix The prefix denoting a hex number
  * @return An array of UBytes containing the number
  * */
-internal fun String.toUBytes(
-    binPrefix: String,
-    hexPrefix: String
-): Array<UByte> {
-    return when(determineNumSize(binPrefix, hexPrefix)) {
-        8 -> arrayOf(toUByte(binPrefix, hexPrefix), 0u)
-        16 -> shortToTwoBytes(toUShort(binPrefix, hexPrefix))
-        else -> throw NumberFormatException("Number of invalid size entered")
-    }
+internal fun String.toUBytes(binPrefix: String, hexPrefix: String) = when(determineNumSize(binPrefix, hexPrefix)) {
+    8 -> arrayOf(toUByte(binPrefix, hexPrefix), 0u)
+    16 -> shortToTwoBytes(toUShort(binPrefix, hexPrefix))
+    else -> throw NumberFormatException("Number of invalid size entered")
 }
 
-/**
- * The string value of the ASCII character corresponding to this byte
- * @author RandomLonelyDev
- * @since 1.0.0
- * @return A string representing this byte's ASCII character
- * */
-internal fun UByte.toStr() = toInt().toChar().toString()
+operator fun UShort.plus(other: BitSpecificRegister): UShort = (this + other.pValue.toByte()).toUShort()
+operator fun UByte.plus(other: BitSpecificRegister): UShort = (this + other.pValue.toByte()).toUShort()
+operator fun UShort.plus(other: BitSpecificValue): UShort = (this + other.toByte()).toUShort()
+operator fun UByte.plus(other: BitSpecificValue): UShort = (this + other.toByte()).toUShort()
+fun UShort.next() = (this + 1u).toUShort()
