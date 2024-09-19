@@ -57,4 +57,5 @@ class BitSpecificRegister : Register<BitSpecificRegister, BitSpecificValue>() {
         get() = specificValue
         set(value) = specificValue.setByByte(value.toByte())
     fun getAsByte() = specificValue.toByte()
+    fun getCopy() = specificValue.copy()
 }

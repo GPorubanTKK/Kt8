@@ -180,12 +180,14 @@ class BitSpecificValue(private val bits: Array<Boolean> = Array(8) { false }) : 
         return toReturn
     }
 
+    //TODO: NONE
     fun plus(other: BitSpecificValue, carryIn: Boolean = false): Triple<BitSpecificValue, Boolean, Boolean> { //val, c flag, v flag
         val bitRepresentation = Array(8) { false }
         var carry = carryIn
         for(i in 7 downTo 0) {
-            bitRepresentation[i] = (bits[i] xor other.bits[i]) xor carry
-            carry = (bits[i] && other.bits[i]) || (carry && (bits[i] xor other.bits[i]))
+            val a = bits[i]; val b = other.bits[i]
+            bitRepresentation[i] = a xor b xor carry
+            carry = (a and b) or (b and carry) or (a and carry)
         }
         return Triple(BitSpecificValue(bitRepresentation), carry, (!bits[0] && !other.bits[0] && bitRepresentation[0]) || (bits[0] && other.bits[0] && !bitRepresentation[0]))
     }
@@ -209,5 +211,10 @@ class BitSpecificValue(private val bits: Array<Boolean> = Array(8) { false }) : 
 
     override fun hashCode(): Int {
         return bits.contentHashCode()
+    }
+
+    fun copy(): BitSpecificValue {
+        val dest = Array(8) { bits[it] }
+        return BitSpecificValue(dest)
     }
 }

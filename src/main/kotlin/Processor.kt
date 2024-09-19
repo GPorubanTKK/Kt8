@@ -160,13 +160,13 @@ class Processor(
                     flags.setBit(Position.`128`, z.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, z.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
-                17 -> memory[twoBytesToShort(arg1, arg2)] = accumulator.getValue()
-                18 -> memory[arg1 + w] = accumulator.getValue()
-                19 -> memory[arg1 + x] = accumulator.getValue()
-                20 -> memory[twoBytesToShort(arg1, arg2)] = w.getValue()
-                21 -> memory[twoBytesToShort(arg1, arg2)] = x.getValue()
-                22 -> memory[twoBytesToShort(arg1, arg2)] = y.getValue()
-                23 -> memory[twoBytesToShort(arg1, arg2)] = z.getValue()
+                17 -> memory[twoBytesToShort(arg1, arg2)] = accumulator.getCopy()
+                18 -> memory[arg1 + w] = accumulator.getCopy()
+                19 -> memory[arg1 + x] = accumulator.getCopy()
+                20 -> memory[twoBytesToShort(arg1, arg2)] = w.getCopy()
+                21 -> memory[twoBytesToShort(arg1, arg2)] = x.getCopy()
+                22 -> memory[twoBytesToShort(arg1, arg2)] = y.getCopy()
+                23 -> memory[twoBytesToShort(arg1, arg2)] = z.getCopy()
                 24 -> pc.setByValue(twoBytesToShort(arg1, arg2))
                 25 -> {
                     val addr = twoBytesToShort(arg1, arg2)
@@ -217,7 +217,7 @@ class Processor(
                     flags.setBit(Position.`128`, memory[twoBytesToShort(arg1, arg2)].getBit(Position.`128`)) //set negative flag
                 }
                 57 -> {
-                    flags.setBit(Position.`1`, accumulator.getValue().rotateByteLeft(flags.getBit(Position.`1`)))
+                    flags.setBit(Position.`1`, accumulator.getCopy().rotateByteLeft(flags.getBit(Position.`1`)))
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -230,7 +230,7 @@ class Processor(
                     flags.setBit(Position.`128`, memory[twoBytesToShort(arg1, arg2)].getBit(Position.`128`)) //set negative flag
                 }
                 60 -> {
-                    accumulator.getValue().rotateByteRight(flags.getBit(Position.`1`))
+                    accumulator.getCopy().rotateByteRight(flags.getBit(Position.`1`))
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -244,7 +244,7 @@ class Processor(
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                 }
                 63 -> {
-                    flags.setBit(Position.`1`, accumulator.getValue().bitShiftRight())
+                    flags.setBit(Position.`1`, accumulator.getCopy().bitShiftRight())
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -259,7 +259,7 @@ class Processor(
                     flags.setBit(Position.`128`, loc.getBit(Position.`128`)) //set negative flag
                 }
                 66 -> {
-                    flags.setBit(Position.`1`, accumulator.getValue().bitShiftLeft())
+                    flags.setBit(Position.`1`, accumulator.getCopy().bitShiftLeft())
                     flags.setBit(Position.`128`, accumulator.getBit(Position.`128`)) //set negative flag
                     flags.setBit(Position.`2`, accumulator.pValue == BitSpecificValue.ZERO) //set zero flag
                 }
@@ -380,7 +380,7 @@ class Processor(
             onMemoryUpdate(pc.getValue().toInt())
         }
         outputStream.println("Done.")
-        outputStream.println("A: ${accumulator.getAsByte()} W: ${w.getAsByte()} X: ${x.getAsByte()} Y: ${y.getAsByte()} Z: ${z.getAsByte()} PC: ${pc.pValue} SP: ${sp.getAsByte()} FLAGS: \n${flags.getValue()}")
+        outputStream.println("A: ${accumulator.getAsByte()} W: ${w.getAsByte()} X: ${x.getAsByte()} Y: ${y.getAsByte()} Z: ${z.getAsByte()} PC: ${pc.pValue} SP: ${sp.getAsByte()} FLAGS: \n${flags.getCopy()}")
     }
 
     internal fun cmp(register: BitSpecificRegister, valueToCompare: UByte) = when(register.getAsByte().compareTo(valueToCompare)) {
